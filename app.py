@@ -18,7 +18,7 @@ def add(inp):
         'params':'CM015.110@DS034101'+inp,
         'pWaitDiv':'T'
     }
-    response = requests.post(url+'d/s/add?fake='+str(fake), json=data, headers=headers)
+    response = requests.post(url+'d/s/add?fake='+str(fake), data=data, headers=headers)
     print(response.status_code)
 
 def delete(inp):
@@ -26,7 +26,7 @@ def delete(inp):
         'params':'CM015.110@DS034101'+inp,
         'pWaitDiv':'T'
     }
-    response = requests.post(url+'d/s/del?fake='+str(fake), json=data, headers=headers)
+    response = requests.post(url+'d/s/del?fake='+str(fake), data=data, headers=headers)
     print(response.status_code)
 
 def login(id,pw, secNo):
@@ -35,19 +35,15 @@ def login(id,pw, secNo):
         'txtPwd':pw,
         'secNo':secNo
     }
-    response = requests.post(url+'d/l/loginCheck?fake='+str(fake), json=data, headers=headers)
+    response = requests.post(url+'d/l/loginCheck?fake='+str(fake), data=data, headers=headers)
     print(response.status_code)
-    print(response.text)
-
-
-response = requests.post(url+'p/l/loginPage')
 response = requests.get(url)
+print(response.text)
 if response.status_code == 200:
     inp = input('로그인 하시겠습니까? Y/N : ')
     if inp == 'Y' or inp == 'y':
         id = input('id 입력 : ')
         pw = input('pw 입력 : ')
-        print(response.text)
         fake = response.text.find('src="/static/js/fn-appinfo.min.js?v=')
         fakeend = response.text.find('" type="text/javascript"></script>')
         if fake == -1 or fakeend == -1:
@@ -55,6 +51,7 @@ if response.status_code == 200:
         else:
             fake = response.text[fake+36:fakeend]
             response = requests.get(url+'d/l/mcrImg?fake='+fake)
+            print(fake)
             if response.status_code == 200:
             # 이미지 데이터를 BytesIO로 변환하여 PIL에서 처리 가능하도록 함
                 img = Image.open(BytesIO(response.content))
