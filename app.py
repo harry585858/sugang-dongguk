@@ -9,12 +9,16 @@ from io import BytesIO
 #1737774763142 51191
 url = 'https://sugang.dongguk.edu/'
 fake = 1737774763142 #보안문자 이미지 번호
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    "Connection": "keep-alive"  # Keep-Alive 헤더 추가
+}
 def add(inp):
     data = {
         'params':'CM015.110@DS034101'+inp,
         'pWaitDiv':'T'
     }
-    response = requests.post(url+'d/s/add?fake='+str(fake), json=data)
+    response = requests.post(url+'d/s/add?fake='+str(fake), json=data, headers=headers)
     print(response.status_code)
 
 def delete(inp):
@@ -22,20 +26,22 @@ def delete(inp):
         'params':'CM015.110@DS034101'+inp,
         'pWaitDiv':'T'
     }
-    response = requests.post(url+'d/s/del?fake='+str(fake), json=data)
+    response = requests.post(url+'d/s/del?fake='+str(fake), json=data, headers=headers)
     print(response.status_code)
+
 def login(id,pw, secNo):
     data = {
         'txtUserID':id,
         'txtPwd':pw,
         'secNo':secNo
     }
-    response = requests.post(url+'d/l/loginCheck?fake='+str(fake), json=data)
+    response = requests.post(url+'d/l/loginCheck?fake='+str(fake), json=data, headers=headers)
     print(response.status_code)
     print(response.text)
 
 
 response = requests.post(url+'p/l/loginPage')
+response = requests.get(url)
 if response.status_code == 200:
     inp = input('로그인 하시겠습니까? Y/N : ')
     if inp == 'Y' or inp == 'y':
