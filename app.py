@@ -59,12 +59,11 @@ def start():
             else:
                 print('다시 입력')
         elif select == 3:
-            exit()
+            return
 
 
 response = session.get(url,headers=headers)
 response1 = session.post(url+'p/l/loginPage', headers=headers)
-print(response1.text)
 if response.status_code == 200:
     inp = input('로그인 하시겠습니까? Y/N : ')
     if inp == 'Y' or inp == 'y':
