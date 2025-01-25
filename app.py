@@ -37,8 +37,12 @@ def login(id,pw, secNo):
     }
     response = requests.post(url+'d/l/loginCheck?fake='+str(fake), data=data, headers=headers)
     print(response.status_code)
+
+
+
 response = requests.get(url)
-print(response.text)
+response1 = requests.post(url+'p/l/loginPage')
+print(response1.text)
 if response.status_code == 200:
     inp = input('로그인 하시겠습니까? Y/N : ')
     if inp == 'Y' or inp == 'y':
