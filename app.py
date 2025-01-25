@@ -43,6 +43,24 @@ def login(id,pw, secNo):
     response = session.post(url+'d/l/loginCheck?fake='+str(fake), data=data, headers=headers)
     return response.text
 
+def start():
+    while True:
+        select = input('신청/취소/끝 1/2/3')
+        if select == 1:
+            subject = input('과목@분반 형식 입력 : ')
+            if subject.find('@') != -1:
+                add(subject)
+            else:
+                print('다시 입력')
+        elif select == 2:
+            subject = input('과목@분반 형식 입력 : ')
+            if subject.find('@') != -1:
+                delete(subject)
+            else:
+                print('다시 입력')
+        elif select == 3:
+            exit()
+
 
 response = session.get(url,headers=headers)
 response1 = session.post(url+'p/l/loginPage', headers=headers)
@@ -65,6 +83,10 @@ if response.status_code == 200:
                 img = Image.open(BytesIO(response.content))
                 img.show()
             secNo = input('보안문자 입력 : ')
-            print(login(id,pw,secNo))
+            if login(id,pw,secNo).find('OK') != -1:
+                print('로그인 성공')
+                start()
+            else:
+                print('로그인 실패')
 else:
     print('사이트 접속 불가')
