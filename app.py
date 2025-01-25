@@ -1,6 +1,7 @@
 import requests
 from PIL import Image
 from io import BytesIO
+#harry585858
 #request query(보안문자) fake 번호 이미지?
 #post sugang.dongguk.edu/d/l/loginCheck?fake=
 #txtUserID txtPwd secNo 입력한보안문자
