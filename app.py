@@ -6,19 +6,23 @@ from io import BytesIO
 #txtUserID txtPwd secNo 입력한보안문자
 #POST sugang.dongguk.edu/d/s/del?fake=(fake 번호) 삭제 params: CM015.110@DS034101@CSC4011@01 형태
 #post sugang.dongguk.edu/d/s/add?fake=(fake 번호) 추가 params: CM015.110@DS034101@CSC4011@01 형태
-#1737774763142 51191
+#1737774763142
 url = 'https://sugang.dongguk.edu/'
-fake = 1737774763142 #보안문자 이미지 번호
+fake = 173777 #보안문자 이미지 번호
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
     "Connection": "keep-alive"  # Keep-Alive 헤더 추가
 }
+cookies = {
+
+}
+session = requests.Session()
 def add(inp):
     data = {
         'params':'CM015.110@DS034101'+inp,
         'pWaitDiv':'T'
     }
-    response = requests.post(url+'d/s/add?fake='+str(fake), data=data, headers=headers)
+    response = session.post(url+'d/s/add?fake='+str(fake), data=data, headers=headers)
     print(response.status_code)
 
 def delete(inp):
@@ -26,7 +30,7 @@ def delete(inp):
         'params':'CM015.110@DS034101'+inp,
         'pWaitDiv':'T'
     }
-    response = requests.post(url+'d/s/del?fake='+str(fake), data=data, headers=headers)
+    response = session.post(url+'d/s/del?fake='+str(fake), data=data, headers=headers)
     print(response.status_code)
 
 def login(id,pw, secNo):
@@ -35,13 +39,12 @@ def login(id,pw, secNo):
         'txtPwd':pw,
         'secNo':secNo
     }
-    response = requests.post(url+'d/l/loginCheck?fake='+str(fake), data=data, headers=headers)
-    print(response.status_code)
+    response = session.post(url+'d/l/loginCheck?fake='+str(fake), data=data, headers=headers)
+    return response.text
 
 
-
-response = requests.get(url)
-response1 = requests.post(url+'p/l/loginPage')
+response = session.get(url,headers=headers)
+response1 = session.post(url+'p/l/loginPage', headers=headers)
 print(response1.text)
 if response.status_code == 200:
     inp = input('로그인 하시겠습니까? Y/N : ')
@@ -54,13 +57,13 @@ if response.status_code == 200:
             print("fake 번호를 찾을 수 없습니다.")
         else:
             fake = response.text[fake+36:fakeend]
-            response = requests.get(url+'d/l/mcrImg?fake='+fake)
+            response = session.get(url+'d/l/mcrImg?fake='+fake)
             print(fake)
             if response.status_code == 200:
             # 이미지 데이터를 BytesIO로 변환하여 PIL에서 처리 가능하도록 함
                 img = Image.open(BytesIO(response.content))
                 img.show()
             secNo = input('보안문자 입력 : ')
-            login(id,pw,secNo)
+            print(login(id,pw,secNo))
 else:
     print('사이트 접속 불가')
